@@ -29,7 +29,8 @@ class Ball(GameObject):
             pygame.Surface(pyng.settings.BALL_SIZE), pyng.settings.BALL_START_POS
         )
         self.color = pygame.color.THECOLORS[pyng.settings.BALL_COLORNAME]
-        self.surface.fill(self.color)
+        self.surface.set_colorkey((0, 0, 0))
+        pygame.draw.circle(self.surface, self.color, (5, 5), 5)
 
     def update(self, delta_time):
         pass
