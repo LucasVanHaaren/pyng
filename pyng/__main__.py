@@ -1,19 +1,18 @@
-import pygame
 import sys
+import pygame as pg
+import pyng.settings as s
 from pyng.game import Game
-from pyng import settings
 
 
 def main():
-    # set global params
-    pygame.init()
-    pygame.display.set_caption(settings.SCREEN_CAPTION)
-    pygame.mouse.set_visible(settings.SCREEN_MOUSE_VISIBLE)
 
-    # instantiate and run a game
-    Game().run()
+    pg.init()
+    pg.display.set_caption(s.SCREEN_CAPTION)
+    screen = pg.display.set_mode(s.SCREEN_MODE)
 
-    pygame.quit()
+    Game(screen).run()
+
+    pg.quit()
 
 
 if __name__ == "__main__":
