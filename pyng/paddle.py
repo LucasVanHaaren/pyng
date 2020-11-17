@@ -12,7 +12,7 @@ class Paddle(pg.sprite.Sprite):
     INC_X_VELOCITY = 2
     DEC_X_VELOCITY = 1
 
-    def __init__(self, color, side):
+    def __init__(self, color, side, move_left_key, move_right_key):
         super().__init__()
         self.screen = pg.display.get_surface()
         self.screen_rect = self.screen.get_rect()
@@ -21,6 +21,9 @@ class Paddle(pg.sprite.Sprite):
         self.side = side
         self.score = 0
         self.x_velocity = 0
+
+        self.move_left_key = move_left_key
+        self.move_right_key = move_right_key
 
         self.image.fill(pg.Color(color))
         self.reset()
@@ -43,7 +46,7 @@ class Paddle(pg.sprite.Sprite):
             self.x_velocity += self.INC_X_VELOCITY
 
     def move_reverse(self):
-        if abs(self.x_velocity) > self.INC_X_VELOCITY_FACTOR:
+        if abs(self.x_velocity) >= self.INC_X_VELOCITY:
             self.x_velocity = -self.x_velocity
 
     def _decrease_x_velocity(self):
