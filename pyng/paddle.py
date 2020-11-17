@@ -13,9 +13,10 @@ class Paddle(pg.sprite.Sprite):
     DEC_X_VELOCITY = 1
 
     def __init__(self, color, side):
-        pg.sprite.Sprite.__init__(self)
-        self.screen = pg.display.get_surface().get_rect()
-        self.image = pg.Surface(s.PADDLE_SIZE)
+        super().__init__()
+        self.screen = pg.display.get_surface()
+        self.screen_rect = self.screen.get_rect()
+        self.image = pg.Surface(s.PADDLE_SIZE).convert()
         self.rect = self.image.get_rect()
         self.side = side
         self.score = 0
@@ -25,11 +26,11 @@ class Paddle(pg.sprite.Sprite):
         self.reset()
 
     def reset(self):
-        self.rect.centerx = self.screen.centerx
+        self.rect.centerx = self.screen_rect.centerx
         if self.side == PaddleSide.TOP:
             self.rect.top = self.rect.top + self.POSITION_MARGIN
         elif self.side == PaddleSide.BOTTOM:
-            self.rect.bottom = self.screen.bottom - self.POSITION_MARGIN
+            self.rect.bottom = self.screen_rect.bottom - self.POSITION_MARGIN
         else:
             raise ValueError("Paddle.side must be of type PaddleSide")
 
@@ -52,9 +53,8 @@ class Paddle(pg.sprite.Sprite):
         elif self.x_velocity <= (0 - self.DEC_X_VELOCITY):
             self.x_velocity += self.DEC_X_VELOCITY
 
-    def update(self):
-        # self.rect = self.rect.move(self.x_velocity * delta_time, 0)
-        self.rect = self.rect.move(self.x_velocity, 0)
+    def update(self, delta_time):
+        self.rect = self.rect.move(self.x_velocity * delta_time, 0)
         self._decrease_x_velocity()
 
 
