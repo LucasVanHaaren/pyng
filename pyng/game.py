@@ -72,6 +72,15 @@ class Game:
             self.paddles, self.map_bounds, False, False
         ):
             paddle.move_reverse()
+        if pg.sprite.spritecollide(self.ball, self.paddles, False):
+            self.ball.bounce()
+        if pg.sprite.spritecollide(self.ball, self.map_bounds, False, False):
+            self.ball.bounce()
+        for goal in pg.sprite.spritecollide(self.ball, self.goal_boundaries, False):
+            for paddle in self.paddles:
+                if paddle.side == goal.opponent:
+                    paddle.score += 1
+            self.score_ui.set_score([self.paddle1.score, self.paddle2.score])
 
     def _handle_events(self, events):
         for event in events:
@@ -84,6 +93,11 @@ class Game:
                 paddle.move_left()
             if keys[paddle.move_right_key]:
                 paddle.move_right()
+        if keys[pg.K_z]:
+            self.ball.rect.y += 5
+        if keys[pg.K_s]:
+            self.ball.rect.y -= 5
+
             # if keys[pg.K_a]:
             #     self.paddle1.score += 1
             #     self.score_ui.set_score([self.paddle1.score, self.paddle2.score])
