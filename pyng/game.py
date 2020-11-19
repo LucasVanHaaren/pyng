@@ -49,29 +49,24 @@ class Game:
     def run(self):
         self.running = True
         last_time = time.time()
-
+        self.ball.serve()
         while self.running:
             delta_time, last_time = self._get_delta_time(last_time)
-
-            events = pg.event.get()
-            self._handle_events(events)
-
-            keys = pg.key.get_pressed()
-            self._handle_key_pressed(keys)
-
-            self._handle_collides()
-
+            self._handle_events(pg.event.get())
+            self._handle_key_pressed(pg.key.get_pressed())
             self.game_objects.update(delta_time)
+            self._handle_collides(delta_time)
 
             dirty = self.game_objects.draw(self.screen)
             pg.display.update(dirty)
             self.clock.tick(self.framerate)
 
-    def _handle_collides(self):
+    def _handle_collides(self, delta_time):
         for paddle in pg.sprite.groupcollide(
             self.paddles, self.map_bounds, False, False
         ):
             paddle.move_reverse()
+            paddle.update(delta_time)
         if pg.sprite.spritecollide(self.ball, self.paddles, False):
             self.ball.bounce()
         if pg.sprite.spritecollide(self.ball, self.map_bounds, False, False):
@@ -93,14 +88,6 @@ class Game:
                 paddle.move_left()
             if keys[paddle.move_right_key]:
                 paddle.move_right()
-        if keys[pg.K_z]:
-            self.ball.rect.y += 5
-        if keys[pg.K_s]:
-            self.ball.rect.y -= 5
-
-            # if keys[pg.K_a]:
-            #     self.paddle1.score += 1
-            #     self.score_ui.set_score([self.paddle1.score, self.paddle2.score])
 
     def _get_delta_time(self, last_time):
         """Compute delta_time, return delta time and last time"""

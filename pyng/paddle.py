@@ -46,8 +46,10 @@ class Paddle(pg.sprite.Sprite):
             self.x_velocity += self.INC_X_VELOCITY
 
     def move_reverse(self):
-        if abs(self.x_velocity) >= self.INC_X_VELOCITY:
-            self.x_velocity = -self.x_velocity
+        if self.x_velocity > 0:
+            self.x_velocity = -(self.x_velocity + self.INC_X_VELOCITY)
+        elif self.x_velocity < 0:
+            self.x_velocity = -self.x_velocity + self.INC_X_VELOCITY
 
     def _decrease_x_velocity(self):
         # slow down if paddle is in movement
