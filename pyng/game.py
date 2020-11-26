@@ -1,33 +1,27 @@
-import time
 import pygame as pg
-import pyng.settings as s
 
 from pyng.context import Context
-from pyng.paddle import Paddle, PaddleSide
-from pyng.ball import Ball
-from pyng.ui import BackgroundUI, ScoreUI
+from pyng.objects.paddle import Paddle, PaddleSide
+from pyng.objects.ball import Ball
+from pyng.ui.background import Background
+from pyng.ui.score import Score
 
 
 class Game(Context):
     def __init__(self, screen):
         super().__init__(screen)
-        self.background_ui = BackgroundUI("cadetblue", "white")
-        self.score_ui = ScoreUI("white")
 
-        self.paddle1 = Paddle("white", PaddleSide.BOTTOM)
-        self.paddle2 = Paddle("white", PaddleSide.TOP)
+        self.background = Background("cadetblue", "white")
+        self.score = Score("white")
+        self.paddle_bot = Paddle("white", PaddleSide.BOTTOM)
+        self.paddle_top = Paddle("white", PaddleSide.TOP)
         self.ball = Ball("white")
 
-        self.game_objects = pg.sprite.RenderUpdates()
-        self.game_objects.add(
-            self.background_ui, self.score_ui, self.paddle1, self.paddle2, self.ball
+        self.paddles = pg.sprite.Group(self.paddle_top, self.paddle_bot)
+        self.ui_objects = pg.sprite.Group(self.background, self.score)
+        self.game_objects = pg.sprite.RenderUpdates(
+            self.ui_objects, self.paddles, self.ball
         )
-
-        self.ui_objects = pg.sprite.Group()
-        self.ui_objects.add(self.background_ui, self.score_ui)
-
-        self.paddles = pg.sprite.Group()
-        self.paddles.add(self.paddle1, self.paddle2)
 
     def run(self):
         super().run()
@@ -43,6 +37,6 @@ class Game(Context):
 
     def _handle_keypressed(self, keys):
         if keys[pg.K_LEFT]:
-            self.paddle1.move_left()
+            self.paddle_bot.move_left()
         if keys[pg.K_RIGHT]:
-            self.paddle1.move_right()
+            self.paddle_bot.move_right()
